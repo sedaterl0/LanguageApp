@@ -19,6 +19,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.sinch.android.rtc.AudioController;
 import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.calling.Call;
@@ -57,6 +60,8 @@ public class CallScreenActivity extends BaseActivity {
 
     private static final String FIREBASE_URL = "https://chatapp-b17f7.firebaseio.com/";
     private Firebase mFirebaseRef,nFirebaseRef;
+
+    String dil, mesaj;
 
    // Chat ch=new Chat();
 
@@ -102,14 +107,71 @@ public class CallScreenActivity extends BaseActivity {
 
         Firebase.setAndroidContext(this);
 
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(MainActivity.mUsername).child(mCallerName.getText().toString());
-        nFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(mCallerName.getText().toString()).child(MainActivity.mUsername);
+        mFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(MainActivity.mUsername).child(MainActivity.userid);
+        nFirebaseRef = new Firebase(FIREBASE_URL);
+
 
         // TODO Auto-generated method stub
              /*   loadingDialog = new ProgressDialog(context);
                 loadingDialog.setCancelable(false);
                 loadingDialog.setMessage("Lütfen Konuşun");
                 loadingDialog.show();*/
+
+        endCallButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endCall();
+            }
+        });
+
+        mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
+        if (savedInstanceState == null) {
+            mCallStart = System.currentTimeMillis();
+        }
+    }
+
+    @Override
+    public void onServiceConnected() {
+        Call call = getSinchServiceInterface().getCall(mCallId);
+        if (call != null) {
+            if (!mAddedListener) {
+                call.addCallListener(new SinchCallListener());
+                mAddedListener = true;
+            }
+        } else {
+            Log.e(TAG, "Started with invalid callId, aborting.");
+            finish();
+        }
+
+        updateUI();
+    }
+
+    private String translate(String textToTranslate, String targetLanguage) {
+
+        TranslateOptions options = TranslateOptions.newBuilder()
+                .setApiKey("AIzaSyDBGQwU3XGHOgI2uiyPP_P4fQDkwjVR7pk").build();
+        Translate trService = options.getService();
+        Translation translation = trService.translate(textToTranslate, Translate.TranslateOption.targetLanguage(targetLanguage));
+        return translation.getTranslatedText();
+
+
+    }
+
+    //method to update video feeds in the UI
+    private void updateUI() {
+        if (getSinchServiceInterface() == null) {
+            return; // early
+        }
+
+        Call call = getSinchServiceInterface().getCall(mCallId);
+        if (call != null) {
+            mCallerName.setText(call.getRemoteUserId());
+            mCallState.setText(call.getState().toString());
+            if (call.getState() == CallState.ESTABLISHED) {
+                //when the call is established, addVideoViews configures the video to  be shown
+                addVideoViews();
+            }
+        }
         speechToTextButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +195,7 @@ public class CallScreenActivity extends BaseActivity {
                                         .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                                 for (String speechResult : speechResults) {
                                     Log.i(TAG, speechResult);
-                                  //  txt.setText(speechResult);
+                                    //  txt.setText(speechResult);
                                     Toast.makeText(
                                             getApplicationContext(),
                                             speechResult,
@@ -202,59 +264,6 @@ public class CallScreenActivity extends BaseActivity {
             }
         });
 
-        endCallButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endCall();
-            }
-        });
-
-        mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
-        if (savedInstanceState == null) {
-            mCallStart = System.currentTimeMillis();
-        }
-    }
-
-    @Override
-    public void onServiceConnected() {
-        Call call = getSinchServiceInterface().getCall(mCallId);
-        if (call != null) {
-            if (!mAddedListener) {
-                call.addCallListener(new SinchCallListener());
-                mAddedListener = true;
-            }
-        } else {
-            Log.e(TAG, "Started with invalid callId, aborting.");
-            finish();
-        }
-
-        updateUI();
-    }
-
-    //method to update video feeds in the UI
-    private void updateUI() {
-        if (getSinchServiceInterface() == null) {
-            return; // early
-        }
-
-        Call call = getSinchServiceInterface().getCall(mCallId);
-        if (call != null) {
-            mCallerName.setText(call.getRemoteUserId());
-            mCallState.setText(call.getState().toString());
-            if (call.getState() == CallState.ESTABLISHED) {
-                //when the call is established, addVideoViews configures the video to  be shown
-                addVideoViews();
-            }
-        }
-    }
-
-    //stop the timer when call is ended
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDurationTask.cancel();
-        mTimer.cancel();
-        removeVideoViews();
     }
 
     //start the timer for the call duration here
@@ -269,6 +278,7 @@ public class CallScreenActivity extends BaseActivity {
 
 
 
+
         nFirebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -278,9 +288,52 @@ public class CallScreenActivity extends BaseActivity {
 
                //
                 // dataSnapshot.child("1").getValue(Chat.class);
-                if(dataSnapshot.getValue()!=null) {
+                dil = dataSnapshot.child("Users").child(MainActivity.userid).getValue(UsersClass.class).getKullaniciMilliyet();
 
-                    txt.setText(dataSnapshot.child("1").getValue(Chat.class).getMessage());
+
+                if (dataSnapshot.child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername).getValue() != null) {
+
+
+                    mesaj = dataSnapshot.child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername).child("1").getValue(Chat.class).getMessage();
+
+                    if (dil.matches("English")) {
+
+                        Translate.LanguageListOption.targetLanguage("en");
+
+                    } else if (dil.matches("Français")) {
+
+                        Translate.LanguageListOption.targetLanguage("fr");
+
+                    } else if (dil.matches("Deutsch")) {
+
+                        Translate.LanguageListOption.targetLanguage("de");
+
+                    } else if (dil.matches("Türk")) {
+
+                        Translate.LanguageListOption.targetLanguage("tr");
+
+                    }
+
+                    if (LoginActivity.kullaniciMil.matches("English")) {
+
+                        txt.setText(translate(mesaj, "en"));
+
+
+                    } else if (LoginActivity.kullaniciMil.matches("Français")) {
+
+                        txt.setText(translate(mesaj, "fr"));
+
+                    } else if (LoginActivity.kullaniciMil.matches("Deutsch")) {
+
+                        txt.setText(translate(mesaj, "de"));
+
+                    } else if (LoginActivity.kullaniciMil.matches("Türk")) {
+
+                        txt.setText(translate(mesaj, "tr"));
+
+                    }
+
+                    //txt.setText(dataSnapshot.child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername).child("1").getValue(Chat.class).getMessage());
                 }
 
              //   }
@@ -291,6 +344,21 @@ public class CallScreenActivity extends BaseActivity {
 
             }
         });
+    }
+
+    //stop the timer when call is ended
+    @Override
+    public void onStop() {
+        super.onStop();
+        mDurationTask.cancel();
+        mTimer.cancel();
+        removeVideoViews();
+    }
+
+    interface TranslateCallback {
+        void onSuccess(String translatedText);
+
+        void onFailure();
     }
 
     @Override

@@ -64,8 +64,8 @@ public class KonusmaDinleme extends AppCompatActivity {
                         for (String speechResult : speechResults) {
                             Log.i(TAG, speechResult);
                             txt.setText(speechResult);
-                            Translate.LanguageListOption.targetLanguage("en");
 
+                            Translate.LanguageListOption.targetLanguage("en");
                             txt.setText(translate(speechResult, "en"));
 
 
