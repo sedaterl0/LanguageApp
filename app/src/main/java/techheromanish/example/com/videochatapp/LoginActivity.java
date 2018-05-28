@@ -1,14 +1,16 @@
 package techheromanish.example.com.videochatapp;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.sinch.android.rtc.SinchError;
@@ -21,6 +23,10 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
     private ProgressDialog mSpinner;
     private Button btn;
     public static String mUsername,userid;
+    public static String kullaniciMil, kullaniciAd;
+    Spinner spin;
+    String[] milliyet = new String[]{"English", "Français", "Deutsch", "Türk"};
+    EditText edtKullanici;
 
 
 
@@ -52,22 +58,45 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 
         //initializing UI elements
 
+        edtKullanici = (EditText) findViewById(R.id.edt_kullaniciadi);
+        spin = (Spinner) findViewById(R.id.spn_kullanicidil);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, milliyet);
+        spin.setAdapter(arrayAdapter);
+        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                kullaniciMil = parent.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
     private void setupUsername() {
         SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
         mUsername = prefs.getString("username", null);
+        kullaniciAd = prefs.getString("KullaniciAdi", null);
+        kullaniciMil = prefs.getString("KullaniciMilliyet", null);
 
         if (mUsername == null) {
             Random r = new Random();
             // Assign a random user name if we don't have one saved.
             mUsername = "JavaUser" + r.nextInt(100000);
             prefs.edit().putString("username", mUsername).commit();
+            kullaniciAd = edtKullanici.getText().toString();
+            prefs.edit().putString("KullaniciAdi", kullaniciAd).commit();
+            prefs.edit().putString("KullaniciMilliyet", kullaniciMil).commit();
+
 
         }
         Intent i = new Intent(this, LanguageAppService.class);
         i.putExtra("username", mUsername);
+        i.putExtra("KullaniciAdi", kullaniciAd);
+        i.putExtra("KullaniciMilliyet", kullaniciMil);
         this.startService(i);
     }
     @Override

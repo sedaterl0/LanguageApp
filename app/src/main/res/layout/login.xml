@@ -12,19 +12,20 @@
 
 
     <EditText
-    android:id="@+id/edtkullaniciadi"
+        android:id="@+id/edt_kullaniciadi"
     android:layout_width="200dp"
     android:layout_height="50dp"
     android:text="Kullanıcı Adı"
         android:layout_gravity="center"/>
 
     <Spinner
-        android:id="@+id/edtkullanicidil"
+        android:id="@+id/spn_kullanicidil"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:text="Milliyet"
         android:layout_gravity="center"/>
     <Button
+        android:id="@+id/btn_giris"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

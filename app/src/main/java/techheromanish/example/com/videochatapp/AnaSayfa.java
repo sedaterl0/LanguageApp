@@ -1,7 +1,6 @@
 package techheromanish.example.com.videochatapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,9 +27,8 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class AnaSayfa extends AppCompatActivity implements ValueEventListener {
+public class AnaSayfa extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -73,7 +71,10 @@ public class AnaSayfa extends AppCompatActivity implements ValueEventListener {
         setSupportActionBar(toolbar);
         Firebase.setAndroidContext(this);
         mRef = new Firebase("https://chatapp-b17f7.firebaseio.com/");
-        mRef.addValueEventListener(this);
+        UsersClass users = new UsersClass(LoginActivity.kullaniciAd, LoginActivity.mUsername, LoginActivity.kullaniciMil);
+        mRef.child("Users").child(LoginActivity.mUsername).setValue(users);
+        mRef.child("Rations").child(LoginActivity.kullaniciMil).child(LoginActivity.mUsername).setValue(LoginActivity.kullaniciAd);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -121,30 +122,8 @@ public class AnaSayfa extends AppCompatActivity implements ValueEventListener {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupUsername() {
-        SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
-        mUsername = prefs.getString("username", null);
 
-        if (mUsername == null) {
-            Random r = new Random();
-            // Assign a random user name if we don't have one saved.
-            mUsername = "JavaUser" + r.nextInt(100000);
-            prefs.edit().putString("username", mUsername).commit();
-        }
-        Intent i = new Intent(this, LanguageAppService.class);
-        i.putExtra("username", mUsername);
-        this.startService(i);
-    }
 
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        mRef.child("kisiler").child(LoginActivity.mUsername).setValue(LoginActivity.mUsername);
-    }
-
-    @Override
-    public void onCancelled(FirebaseError firebaseError) {
-
-    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -203,7 +182,7 @@ public class AnaSayfa extends AppCompatActivity implements ValueEventListener {
 
             if (i == 1) {
                 kisi.clear();
-                for (DataSnapshot kullanici : dataSnapshot.child("kisiler").getChildren()) {
+                for (DataSnapshot kullanici : dataSnapshot.child("Users").getChildren()) {
 
 
                     kisi.add(kullanici.getKey());
@@ -221,7 +200,7 @@ public class AnaSayfa extends AppCompatActivity implements ValueEventListener {
 
                         Intent intent = new Intent(getContext(), MainActivity.class);
 
-                        intent.putExtra("userid", kisi.get(position).toString());
+                    intent.putExtra("userid", kisi.get(position));
                         intent.putExtra("musername", LoginActivity.mUsername);
                         startActivity(intent);
 
