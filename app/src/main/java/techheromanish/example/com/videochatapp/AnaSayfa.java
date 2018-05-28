@@ -185,7 +185,7 @@ public class AnaSayfa extends AppCompatActivity {
                 for (DataSnapshot kullanici : dataSnapshot.child("Users").getChildren()) {
 
 
-                    kisi.add(kullanici.getValue(UsersClass.class).getKullaniciAd());
+                    kisi.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
                 }
 
 

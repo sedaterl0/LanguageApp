@@ -10,7 +10,7 @@ android {
         exclude 'META-INF/INDEX.LIST'
     }
     compileSdkVersion 24
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "techheromanish.example.com.videochatapp"
         minSdkVersion 21
@@ -51,8 +51,5 @@ dependencies {
     compile 'com.firebase:firebase-client-android:2.0.3'
     testCompile 'junit:junit:4.12'
 }
-
-
-
 
 apply plugin: 'com.google.gms.google-services'
