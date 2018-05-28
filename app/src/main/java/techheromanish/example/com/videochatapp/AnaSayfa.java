@@ -83,21 +83,21 @@ public class AnaSayfa extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+    TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent inte = new Intent(AnaSayfa.this, KonusmaDinleme.class);
-                startActivity(inte);
-                // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //       .setAction("Action", null).show();
-            }
-        });
+        @Override
+        public void onClick(View view) {
+            Intent inte = new Intent(AnaSayfa.this, KonusmaDinleme.class);
+            startActivity(inte);
+            // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            //       .setAction("Action", null).show();
+        }
+    });
 
-    }
+}
 
 
     @Override
@@ -185,7 +185,7 @@ public class AnaSayfa extends AppCompatActivity {
                 for (DataSnapshot kullanici : dataSnapshot.child("Users").getChildren()) {
 
 
-                    kisi.add(kullanici.getKey());
+                    kisi.add(kullanici.getValue(UsersClass.class).getKullaniciAd());
                 }
 
 

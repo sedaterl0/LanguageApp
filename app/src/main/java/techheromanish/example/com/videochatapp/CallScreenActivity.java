@@ -102,8 +102,8 @@ public class CallScreenActivity extends BaseActivity {
 
         Firebase.setAndroidContext(this);
 
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(MainActivity.mUsername).child(MainActivity.userid);
-        nFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername);
+        mFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(MainActivity.mUsername).child(mCallerName.getText().toString());
+        nFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(mCallerName.getText().toString()).child(MainActivity.mUsername);
 
         // TODO Auto-generated method stub
              /*   loadingDialog = new ProgressDialog(context);

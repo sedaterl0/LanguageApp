@@ -17,11 +17,11 @@ import com.sinch.android.rtc.SinchError;
 
 import java.util.Random;
 
-public class LoginActivity extends BaseActivity implements SinchService.StartFailedListener {
+public class LoginActivity extends BaseActivity implements SinchService.StartFailedListener,View.OnClickListener {
 
 
     private ProgressDialog mSpinner;
-    private Button btn;
+    private Button giris_btn;
     public static String mUsername,userid;
     public static String kullaniciMil, kullaniciAd;
     Spinner spin;
@@ -57,7 +57,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 */
 
         //initializing UI elements
-
+giris_btn = (Button) findViewById(R.id.btn_giris);
         edtKullanici = (EditText) findViewById(R.id.edt_kullaniciadi);
         spin = (Spinner) findViewById(R.id.spn_kullanicidil);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, milliyet);
@@ -73,7 +73,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 
             }
         });
-
+giris_btn.setOnClickListener(this);
     }
 
     private void setupUsername() {
@@ -112,8 +112,11 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 
         getSinchServiceInterface().setStartListener(this);
         Bundle ext = getIntent().getExtras();
-
+        if(mUsername!=null&&kullaniciAd!=null&&kullaniciMil!=null){
         loginClicked(mUsername);
+        giris_btn.setVisibility(View.INVISIBLE);
+        edtKullanici.setVisibility(View.INVISIBLE);
+        spin.setVisibility(View.INVISIBLE);}
     }
 
     @Override
@@ -164,6 +167,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
         mainActivity.putExtra("musername", mUsername);
       //  mainActivity.putExtra("userid", call);
         startActivity(mainActivity);
+        finish();
     }
 
     private void showSpinner() {
@@ -171,5 +175,14 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
         mSpinner.setTitle("Logging in");
         mSpinner.setMessage("Please wait...");
         mSpinner.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
+        kullaniciAd = edtKullanici.getText().toString();
+        prefs.edit().putString("KullaniciAdi", kullaniciAd).commit();
+        prefs.edit().putString("KullaniciMilliyet", kullaniciMil).commit();
+        loginClicked(mUsername);
     }
 }
