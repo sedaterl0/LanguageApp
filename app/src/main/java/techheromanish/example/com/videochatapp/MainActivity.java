@@ -3,7 +3,6 @@ package techheromanish.example.com.videochatapp;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,8 +16,6 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-
-import techheromanish.example.com.videochatapp.Manifest.permission;
 
 public class MainActivity extends ListActivity {
 
