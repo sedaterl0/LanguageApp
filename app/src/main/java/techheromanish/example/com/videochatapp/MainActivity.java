@@ -3,11 +3,11 @@ package techheromanish.example.com.videochatapp;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,8 +17,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-
-import techheromanish.example.com.videochatapp.Manifest.permission;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 public class MainActivity extends ListActivity {
 
@@ -98,6 +99,7 @@ public class MainActivity extends ListActivity {
         super.onStart();
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
         final ListView listView = getListView();
+
         // Tell our list adapter that we only want 50 messages at a time
         mChatListAdapter = new ChatListAdapter(mFirebaseRef, this, R.layout.chat_message, mUsername);
         listView.setAdapter(mChatListAdapter);
@@ -106,6 +108,39 @@ public class MainActivity extends ListActivity {
             public void onChanged() {
                 super.onChanged();
                 listView.setSelection(mChatListAdapter.getCount() - 1);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Chat mychat = (Chat) parent.getItemAtPosition(position);
+                //  Toast.makeText(view.getContext(),mychat.getMessage(),Toast.LENGTH_SHORT).show();
+                if (!LoginActivity.mUsername.matches(mychat.getAuthor())) {
+                    if (LoginActivity.kullaniciMil.matches("English")) {
+
+
+                        //TranslatemessageText.setText(translate(chat.getMessage(), "en"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "en"), Toast.LENGTH_SHORT).show();
+
+
+                    } else if (LoginActivity.kullaniciMil.matches("Français")) {
+
+                        // TranslatemessageText.setText(translate(chat.getMessage(), "fr"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "fr"), Toast.LENGTH_SHORT).show();
+
+                    } else if (LoginActivity.kullaniciMil.matches("Deutsch")) {
+
+                        //  TranslatemessageText.setText(translate(chat.getMessage(), "de"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "de"), Toast.LENGTH_SHORT).show();
+
+                    } else if (LoginActivity.kullaniciMil.matches("Türk")) {
+
+                        //   TranslatemessageText.setText(translate(chat.getMessage(), "tr"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "tr"), Toast.LENGTH_SHORT).show();
+
+                    }
+                }
             }
         });
 
@@ -157,5 +192,22 @@ public class MainActivity extends ListActivity {
             nFirebaseRef.push().setValue(chat);
             inputText.setText("");
         }
+    }
+
+    private String translate(String textToTranslate, String targetLanguage) {
+
+        TranslateOptions options = TranslateOptions.newBuilder()
+                .setApiKey("AIzaSyDBGQwU3XGHOgI2uiyPP_P4fQDkwjVR7pk").build();
+        Translate trService = options.getService();
+        Translation translation = trService.translate(textToTranslate, Translate.TranslateOption.targetLanguage(targetLanguage));
+        return translation.getTranslatedText();
+
+
+    }
+
+    interface TranslateCallback {
+        void onSuccess(String translatedText);
+
+        void onFailure();
     }
 }
