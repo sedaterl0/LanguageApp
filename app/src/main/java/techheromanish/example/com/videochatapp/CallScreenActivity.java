@@ -1,6 +1,9 @@
 package techheromanish.example.com.videochatapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -41,12 +44,12 @@ public class CallScreenActivity extends BaseActivity {
     static final String TAG = CallScreenActivity.class.getSimpleName();
     static final String CALL_START_TIME = "callStartTime";
     static final String ADDED_LISTENER = "addedListener";
-
+    private MusicIntentReceiver myReceiver;
     private AudioPlayer mAudioPlayer;
     private Timer mTimer;
     private UpdateCallDurationTask mDurationTask;
 
-    private String mCallId;
+    private String mCallId, callerId;
     private long mCallStart = 0;
     private boolean mAddedListener = false;
     private boolean mVideoViewsAdded = false;
@@ -96,7 +99,8 @@ public class CallScreenActivity extends BaseActivity {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.callscreen);
-
+        Bundle bundle = getIntent().getExtras();
+        callerId = bundle.getString("callerId", MainActivity.userid);
         mAudioPlayer = new AudioPlayer(this);
         mCallDuration = (TextView) findViewById(R.id.callDuration);
         mCallerName = (TextView) findViewById(R.id.remoteUser);
@@ -105,12 +109,15 @@ public class CallScreenActivity extends BaseActivity {
         speechToTextButton = (Button) findViewById(R.id.btndinle);
         txt = (TextView) findViewById(R.id.txtkonus);
 
+        myReceiver = new MusicIntentReceiver();
+
         Firebase.setAndroidContext(this);
 
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(MainActivity.mUsername).child(MainActivity.userid);
+        mFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(LoginActivity.mUsername).child(callerId);
+
+
+
         nFirebaseRef = new Firebase(FIREBASE_URL);
-
-
         // TODO Auto-generated method stub
              /*   loadingDialog = new ProgressDialog(context);
                 loadingDialog.setCancelable(false);
@@ -125,6 +132,7 @@ public class CallScreenActivity extends BaseActivity {
         });
 
         mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
+
         if (savedInstanceState == null) {
             mCallStart = System.currentTimeMillis();
         }
@@ -145,6 +153,92 @@ public class CallScreenActivity extends BaseActivity {
 
         updateUI();
     }
+
+    @Override
+    protected void onResume() {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(myReceiver, filter);
+        super.onResume();
+    }
+
+    //start the timer for the call duration here
+    @Override
+    public void onStart() {
+
+        super.onStart();
+        mTimer = new Timer();
+        mDurationTask = new UpdateCallDurationTask();
+        mTimer.schedule(mDurationTask, 0, 500);
+        updateUI();
+
+
+        nFirebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //   Chat ch = new Chat();
+                // dataSnapshot.child("1").getValue(Chat.class);
+                //      if (!ch.getAuthor().matches(MainActivity.mUsername)){
+
+                //
+                // dataSnapshot.child("1").getValue(Chat.class);
+                dil = dataSnapshot.child("Users").child(callerId).getValue(UsersClass.class).getKullaniciMilliyet();
+
+
+                if (dataSnapshot.child("goruntulusohbet").child(callerId).child(LoginActivity.mUsername).getValue() != null) {
+
+
+                    mesaj = dataSnapshot.child("goruntulusohbet").child(callerId).child(LoginActivity.mUsername).child("1").getValue(Chat.class).getMessage();
+
+                    if (dil.matches("English")) {
+
+                        Translate.LanguageListOption.targetLanguage("en");
+
+                    } else if (dil.matches("Français")) {
+
+                        Translate.LanguageListOption.targetLanguage("fr");
+
+                    } else if (dil.matches("Deutsch")) {
+
+                        Translate.LanguageListOption.targetLanguage("de");
+
+                    } else if (dil.matches("Türk")) {
+
+                        Translate.LanguageListOption.targetLanguage("tr");
+
+                    }
+
+                    if (LoginActivity.kullaniciMil.matches("English")) {
+
+                        txt.setText(translate(mesaj, "en"));
+
+
+                    } else if (LoginActivity.kullaniciMil.matches("Français")) {
+
+                        txt.setText(translate(mesaj, "fr"));
+
+                    } else if (LoginActivity.kullaniciMil.matches("Deutsch")) {
+
+                        txt.setText(translate(mesaj, "de"));
+
+                    } else if (LoginActivity.kullaniciMil.matches("Türk")) {
+
+                        txt.setText(translate(mesaj, "tr"));
+
+                    }
+
+                    //txt.setText(dataSnapshot.child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername).child("1").getValue(Chat.class).getMessage());
+                }
+
+                //   }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
 
     private String translate(String textToTranslate, String targetLanguage) {
 
@@ -266,84 +360,23 @@ public class CallScreenActivity extends BaseActivity {
 
     }
 
-    //start the timer for the call duration here
-    @Override
-    public void onStart() {
-
-        super.onStart();
-        mTimer = new Timer();
-        mDurationTask = new UpdateCallDurationTask();
-        mTimer.schedule(mDurationTask, 0, 500);
-        updateUI();
-
-
-
-
-        nFirebaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-             //   Chat ch = new Chat();
-               // dataSnapshot.child("1").getValue(Chat.class);
-          //      if (!ch.getAuthor().matches(MainActivity.mUsername)){
-
-               //
-                // dataSnapshot.child("1").getValue(Chat.class);
-                dil = dataSnapshot.child("Users").child(MainActivity.userid).getValue(UsersClass.class).getKullaniciMilliyet();
-
-
-                if (dataSnapshot.child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername).getValue() != null) {
-
-
-                    mesaj = dataSnapshot.child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername).child("1").getValue(Chat.class).getMessage();
-
-                    if (dil.matches("English")) {
-
-                        Translate.LanguageListOption.targetLanguage("en");
-
-                    } else if (dil.matches("Français")) {
-
-                        Translate.LanguageListOption.targetLanguage("fr");
-
-                    } else if (dil.matches("Deutsch")) {
-
-                        Translate.LanguageListOption.targetLanguage("de");
-
-                    } else if (dil.matches("Türk")) {
-
-                        Translate.LanguageListOption.targetLanguage("tr");
-
-                    }
-
-                    if (LoginActivity.kullaniciMil.matches("English")) {
-
-                        txt.setText(translate(mesaj, "en"));
-
-
-                    } else if (LoginActivity.kullaniciMil.matches("Français")) {
-
-                        txt.setText(translate(mesaj, "fr"));
-
-                    } else if (LoginActivity.kullaniciMil.matches("Deutsch")) {
-
-                        txt.setText(translate(mesaj, "de"));
-
-                    } else if (LoginActivity.kullaniciMil.matches("Türk")) {
-
-                        txt.setText(translate(mesaj, "tr"));
-
-                    }
-
-                    //txt.setText(dataSnapshot.child("goruntulusohbet").child(MainActivity.userid).child(MainActivity.mUsername).child("1").getValue(Chat.class).getMessage());
+    private class MusicIntentReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                int state = intent.getIntExtra("state", -1);
+                switch (state) {
+                    case 0:
+                        Log.d(TAG, "Headset is unplugged");
+                        break;
+                    case 1:
+                        Log.d(TAG, "Headset is plugged");
+                        break;
+                    default:
+                        Log.d(TAG, "I have no idea what the headset state is");
                 }
-
-             //   }
             }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+        }
     }
 
     //stop the timer when call is ended
@@ -458,6 +491,12 @@ public class CallScreenActivity extends BaseActivity {
             setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
             AudioController audioController = getSinchServiceInterface().getAudioController();
             audioController.enableSpeaker();
+            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            boolean headsetEnabled = am.isWiredHeadsetOn();
+            if (headsetEnabled) {
+                audioController.disableSpeaker();
+
+            }
             mCallStart = System.currentTimeMillis();
             Log.d(TAG, "Call offered video: " + call.getDetails().isVideoOffered());
         }

@@ -39,7 +39,7 @@ public class MainActivity extends ListActivity {
 
 
         Bundle extras = getIntent().getExtras();
-        userid = extras.getString("userid");
+        userid = extras.getString("userid", IncomingCallScreenActivity.callerId);
         mUsername=extras.getString("musername");
 
         // Make sure we have a mUsername

@@ -48,6 +48,7 @@ public class LanguageAppService extends Service implements ValueEventListener {
             Firebase.setAndroidContext(this);
             mRef = new Firebase("https://chatapp-b17f7.firebaseio.com/chat/" + mUsername);
             mRef.addValueEventListener(this);
+
             //todo  burasımesaj bildirimleri için işimizi görebilir denenecek
             /*ref.addChildEventListener(new ChildEventListener() {
                 @Override
@@ -94,12 +95,12 @@ public class LanguageAppService extends Service implements ValueEventListener {
     public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-     /*   for (DataSnapshot kullanicilar : dataSnapshot.getChildren()) {
+        for (DataSnapshot kullanicilar : dataSnapshot.getChildren()) {
 
 
             for (DataSnapshot author : kullanicilar.getChildren()) {
 
-                if (!author.child("author").getValue().toString().matches(mUsername)) {*/
+                if (!author.child("author").getValue().toString().matches(mUsername)) {
 //skype yapalım
 
                     NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -120,11 +121,12 @@ public class LanguageAppService extends Service implements ValueEventListener {
                     nm.notify(0, notification);
 
 
-           /*     }
+                }
+
 
             }
 
-        }*/
+        }
 
     }
 

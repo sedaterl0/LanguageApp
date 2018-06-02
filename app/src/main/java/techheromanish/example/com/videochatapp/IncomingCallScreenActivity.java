@@ -20,6 +20,8 @@ public class IncomingCallScreenActivity extends BaseActivity {
     static final String TAG = IncomingCallScreenActivity.class.getSimpleName();
     private String mCallId;
     private AudioPlayer mAudioPlayer;
+    static String callerId;
+    TextView remoteUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class IncomingCallScreenActivity extends BaseActivity {
         Button decline = (Button) findViewById(R.id.declineButton);
         decline.setOnClickListener(mClickListener);
 
+        remoteUser = (TextView) findViewById(R.id.remoteUser);
         mAudioPlayer = new AudioPlayer(this);
         mAudioPlayer.playRingtone();
         mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
@@ -41,9 +44,9 @@ public class IncomingCallScreenActivity extends BaseActivity {
         Call call = getSinchServiceInterface().getCall(mCallId);
         if (call != null) {
             call.addCallListener(new SinchCallListener());
-            TextView remoteUser = (TextView) findViewById(R.id.remoteUser);
-            remoteUser.setText(call.getRemoteUserId());
 
+            remoteUser.setText(call.getRemoteUserId());
+            callerId = call.getRemoteUserId();
         } else {
             Log.e(TAG, "Started with invalid callId, aborting");
             finish();
@@ -57,6 +60,7 @@ public class IncomingCallScreenActivity extends BaseActivity {
             call.answer();
             Intent intent = new Intent(this, CallScreenActivity.class);
             intent.putExtra(SinchService.CALL_ID, mCallId);
+            intent.putExtra("callerId", callerId);
             startActivity(intent);
         } else {
             finish();
