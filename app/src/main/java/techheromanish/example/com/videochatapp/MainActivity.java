@@ -3,10 +3,12 @@ package techheromanish.example.com.videochatapp;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +18,11 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
+import techheromanish.example.com.videochatapp.Manifest.permission;
 
 public class MainActivity extends ListActivity {
 
@@ -106,6 +113,39 @@ public class MainActivity extends ListActivity {
             }
         });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Chat mychat = (Chat) parent.getItemAtPosition(position);
+                //  Toast.makeText(view.getContext(),mychat.getMessage(),Toast.LENGTH_SHORT).show();
+                if (!LoginActivity.mUsername.matches(mychat.getAuthor())) {
+                    if (LoginActivity.kullaniciMil.matches("English")) {
+
+
+                        //TranslatemessageText.setText(translate(chat.getMessage(), "en"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "en"), Toast.LENGTH_SHORT).show();
+
+
+                    } else if (LoginActivity.kullaniciMil.matches("Français")) {
+
+                        // TranslatemessageText.setText(translate(chat.getMessage(), "fr"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "fr"), Toast.LENGTH_SHORT).show();
+
+                    } else if (LoginActivity.kullaniciMil.matches("Deutsch")) {
+
+                        //  TranslatemessageText.setText(translate(chat.getMessage(), "de"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "de"), Toast.LENGTH_SHORT).show();
+
+                    } else if (LoginActivity.kullaniciMil.matches("Türk")) {
+
+                        //   TranslatemessageText.setText(translate(chat.getMessage(), "tr"));
+                        Toast.makeText(view.getContext(), translate(mychat.getMessage(), "tr"), Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            }
+        });
+
         // Finally, a little indication of connection status
         mConnectedListener = mFirebaseRef.getRoot().child(".info/connected").addValueEventListener(new ValueEventListener() {
             @Override
@@ -154,5 +194,22 @@ public class MainActivity extends ListActivity {
             nFirebaseRef.push().setValue(chat);
             inputText.setText("");
         }
+    }
+
+    private String translate(String textToTranslate, String targetLanguage) {
+
+        TranslateOptions options = TranslateOptions.newBuilder()
+                .setApiKey("AIzaSyDBGQwU3XGHOgI2uiyPP_P4fQDkwjVR7pk").build();
+        Translate trService = options.getService();
+        Translation translation = trService.translate(textToTranslate, Translate.TranslateOption.targetLanguage(targetLanguage));
+        return translation.getTranslatedText();
+
+
+    }
+
+    interface TranslateCallback {
+        void onSuccess(String translatedText);
+
+        void onFailure();
     }
 }

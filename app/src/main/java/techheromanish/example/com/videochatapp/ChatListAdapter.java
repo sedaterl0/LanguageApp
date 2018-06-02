@@ -2,6 +2,7 @@ package techheromanish.example.com.videochatapp;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -35,11 +36,15 @@ public class ChatListAdapter extends FirebaseListAdapter<Chat> {
      * @param chat An instance representing the current state of a chat message
      */
     @Override
-    protected void populateView(View view, Chat chat) {
+    protected void populateView(View view, final Chat chat) {
         // Map a Chat object to an entry in our listview
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         String author = chat.getAuthor();
         TextView authorText = (TextView) view.findViewById(R.id.author);
         TextView messageText = (TextView) view.findViewById(R.id.message);
+
+
         authorText.setText(author);
         messageText.setText(chat.getMessage());
 
@@ -55,16 +60,22 @@ public class ChatListAdapter extends FirebaseListAdapter<Chat> {
             authorText.setTextColor(Color.RED);
             params.gravity = Gravity.END;
             params.rightMargin = 25;
+
             authorText.setLayoutParams(params);
             messageText.setLayoutParams(params);
+
 
         } else {
             authorText.setTextColor(Color.BLUE);
             params.gravity = Gravity.START;
             params.leftMargin = 25;
+
             authorText.setLayoutParams(params);
             messageText.setLayoutParams(params);
+
+
         }
 
     }
+
 }
