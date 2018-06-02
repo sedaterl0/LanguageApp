@@ -20,11 +20,12 @@ import com.firebase.client.Query;
 public class ChatListAdapter extends FirebaseListAdapter<Chat> {
 
     // The mUsername for this client. We use this to indicate which messages originated from this user
-    private String mUsername;
+    private String mUsername, userkulAd;
 
-    public ChatListAdapter(Query ref, Activity activity, int layout, String mUsername) {
+    public ChatListAdapter(Query ref, Activity activity, int layout, String mUsername, String userkulAd) {
         super(ref, Chat.class, layout, activity);
         this.mUsername = mUsername;
+        this.userkulAd = userkulAd;
     }
 
     /**
@@ -45,7 +46,7 @@ public class ChatListAdapter extends FirebaseListAdapter<Chat> {
         TextView messageText = (TextView) view.findViewById(R.id.message);
 
 
-        authorText.setText(author);
+        //authorText.setText(author);
         messageText.setText(chat.getMessage());
 
         LinearLayout.LayoutParams params =
@@ -57,6 +58,7 @@ public class ChatListAdapter extends FirebaseListAdapter<Chat> {
 
         // If the message was sent by this user, color it differently
         if (author != null && author.equals(mUsername)) {
+            authorText.setText(LoginActivity.kullaniciAd);
             authorText.setTextColor(Color.RED);
             params.gravity = Gravity.END;
             params.rightMargin = 25;
@@ -66,6 +68,7 @@ public class ChatListAdapter extends FirebaseListAdapter<Chat> {
 
 
         } else {
+            authorText.setText(userkulAd);
             authorText.setTextColor(Color.BLUE);
             params.gravity = Gravity.START;
             params.leftMargin = 25;

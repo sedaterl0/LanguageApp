@@ -26,6 +26,7 @@ public class MainActivity extends ListActivity {
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://chatapp-b17f7.firebaseio.com/";
     public static String userid;
+    String userkulAd;
     public static String mUsername;
     private Firebase mFirebaseRef,nFirebaseRef;
     private ValueEventListener mConnectedListener;
@@ -40,6 +41,7 @@ public class MainActivity extends ListActivity {
 
         Bundle extras = getIntent().getExtras();
         userid = extras.getString("userid", IncomingCallScreenActivity.callerId);
+        userkulAd = extras.getString("userkulad");
         mUsername=extras.getString("musername");
 
         // Make sure we have a mUsername
@@ -100,7 +102,7 @@ public class MainActivity extends ListActivity {
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
         final ListView listView = getListView();
         // Tell our list adapter that we only want 50 messages at a time
-        mChatListAdapter = new ChatListAdapter(mFirebaseRef, this, R.layout.chat_message, mUsername);
+        mChatListAdapter = new ChatListAdapter(mFirebaseRef, this, R.layout.chat_message, mUsername, userkulAd);
         listView.setAdapter(mChatListAdapter);
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override

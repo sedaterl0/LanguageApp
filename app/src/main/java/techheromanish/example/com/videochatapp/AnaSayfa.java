@@ -139,6 +139,7 @@ public class AnaSayfa extends AppCompatActivity {
         int i;
         Firebase mRef;
         List<String> kisi = new ArrayList<String>();
+        List<String> kisikod = new ArrayList<String>();
         AnaSayfa activity;
         String musername;
 
@@ -185,7 +186,9 @@ public class AnaSayfa extends AppCompatActivity {
                 for (DataSnapshot kullanici : dataSnapshot.child("Users").getChildren()) {
 
 
-                    kisi.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
+                    kisi.add(kullanici.getValue(UsersClass.class).getKullaniciAd());
+                    kisikod.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
+
                 }
 
 
@@ -200,7 +203,8 @@ public class AnaSayfa extends AppCompatActivity {
 
                         Intent intent = new Intent(getContext(), MainActivity.class);
 
-                    intent.putExtra("userid", kisi.get(position));
+                    intent.putExtra("userid", kisikod.get(position));
+                    intent.putExtra("userkulad", kisi.get(position));
                         intent.putExtra("musername", LoginActivity.mUsername);
                         startActivity(intent);
 
