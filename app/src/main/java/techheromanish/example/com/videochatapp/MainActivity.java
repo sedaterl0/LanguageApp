@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTitle(userid);
         mainActivity_toolbar.setTitleTextColor(Color.WHITE);
         mainActivity_toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        mainActivity_toolbar.setNavigationIcon(R.mipmap.logomini);
+        mainActivity_toolbar.setLogo(R.drawable.ic_arrow_back_black_24dp);
         mainActivity_toolbar.setOnClickListener(this);
 
     }
