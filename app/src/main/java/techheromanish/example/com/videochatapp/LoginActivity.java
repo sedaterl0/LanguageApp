@@ -26,6 +26,8 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
     String[] milliyet = new String[]{"English", "Français", "Deutsch", "Türk"};
     EditText edtKullanici;
 
+    String kullaniciMilSpin = null;
+
 
 
 
@@ -63,7 +65,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
         spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                kullaniciMil = parent.getSelectedItem().toString();
+                kullaniciMilSpin = parent.getSelectedItem().toString();
             }
 
             @Override
@@ -92,6 +94,10 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 
 
         }
+        if (kullaniciMil == null && kullaniciMilSpin != null) {
+            kullaniciMil = kullaniciMilSpin;
+        }
+
         Intent i = new Intent(this, LanguageAppService.class);
         i.putExtra("username", mUsername);
         //  i.putExtra("KullaniciAdi", kullaniciAd);
