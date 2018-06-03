@@ -3,7 +3,6 @@ package techheromanish.example.com.videochatapp;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -87,16 +86,16 @@ public class AnaSayfa extends AppCompatActivity {
     TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent inte = new Intent(AnaSayfa.this, KonusmaDinleme.class);
-            startActivity(inte);
-            // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            //       .setAction("Action", null).show();
-        }
-    });
+//    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            Intent inte = new Intent(AnaSayfa.this, KonusmaDinleme.class);
+//            startActivity(inte);
+//            // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//            //       .setAction("Action", null).show();
+//        }
+//    });
 
 }
 
@@ -210,10 +209,10 @@ public class AnaSayfa extends AppCompatActivity {
             if (i == 1) {
                 kisi.clear();
                 //  kisikod.clear();
-                for (DataSnapshot kullanici : dataSnapshot.child("Users").getChildren()) {
+                for (DataSnapshot kullanici : dataSnapshot.child("chat").child(LoginActivity.mUsername).getChildren()) {
 
 
-                    kisi.add(kullanici.getValue(UsersClass.class).getKullaniciAd());
+                    kisi.add(kullanici.getKey());
                     //    kisikod.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
 
                 }

@@ -3,13 +3,16 @@ package techheromanish.example.com.videochatapp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,6 +30,8 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
     EditText edtKullanici;
 
     String kullaniciMilSpin = null;
+    LinearLayout lineergiris;
+
 
 
 
@@ -57,6 +62,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 */
 
         //initializing UI elements
+        lineergiris = (LinearLayout) findViewById(R.id.layoutgiris);
         giris_btn = (Button) findViewById(R.id.btn_giris);
         edtKullanici = (EditText) findViewById(R.id.edt_kullaniciadi);
         spin = (Spinner) findViewById(R.id.spn_kullanicidil);
@@ -86,6 +92,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
             //  Random r = new Random();
             // Assign a random user name if we don't have one saved.
             // mUsername = "JavaUser" + r.nextInt(100000);
+            lineergiris.setBackgroundColor(Color.BLUE);
             mUsername = edtKullanici.getText().toString();
             prefs.edit().putString("username", mUsername).commit();
 
@@ -168,17 +175,25 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 
     //Once the connection is made to the Sinch Service, It takes you to the next activity where you enter the name of the user to whom the call is to be placed
     private void openPlaceCallActivity() {
-        Intent mainActivity = new Intent(this, AnaSayfa.class);
-        mainActivity.putExtra("musername", mUsername);
-      //  mainActivity.putExtra("userid", call);
-        startActivity(mainActivity);
-        finish();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent mainActivity = new Intent(LoginActivity.this, AnaSayfa.class);
+                mainActivity.putExtra("musername", mUsername);
+                //  mainActivity.putExtra("userid", call);
+                startActivity(mainActivity);
+                finish();
+            }
+        }, 2000);
+
     }
 
     private void showSpinner() {
         mSpinner = new ProgressDialog(this);
         mSpinner.setTitle("Logging in");
         mSpinner.setMessage("Please wait...");
+
         mSpinner.show();
     }
 

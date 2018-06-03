@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.ValueEventListener;
@@ -30,7 +29,7 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
     private Firebase mFirebaseRef,nFirebaseRef;
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
-    Toolbar mainActivity_toolbar;
+    android.support.v7.widget.Toolbar mainActivity_toolbar;
     EditText inputText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
     }
 
     public void initView() {
-        mainActivity_toolbar = (Toolbar) findViewById(R.id.toolbarMainActivity);
+        mainActivity_toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbarMainActivity);
         inputText = (EditText) findViewById(R.id.messageInput);
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
