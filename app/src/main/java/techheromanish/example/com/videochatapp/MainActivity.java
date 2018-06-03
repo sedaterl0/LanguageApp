@@ -1,9 +1,10 @@
 package techheromanish.example.com.videochatapp;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,7 +20,7 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 
-public class MainActivity extends ListActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://chatapp-b17f7.firebaseio.com/";
@@ -47,8 +48,9 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
         mFirebaseRef = new Firebase(FIREBASE_URL).child("chat").child(mUsername).child(userid);
         nFirebaseRef = new Firebase(FIREBASE_URL).child("chat").child(userid).child(mUsername);
         initView();
+        setSupportActionBar(mainActivity_toolbar);
         mainActivity_toolbar.setTitle(userid);
-        mainActivity_toolbar.setLogo(R.mipmap.logo);
+        mainActivity_toolbar.setBackgroundColor(Color.BLUE);
         mainActivity_toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         mainActivity_toolbar.setOnClickListener(this);
 
@@ -94,7 +96,7 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
-        final ListView listView = getListView();
+        final ListView listView = (ListView) findViewById(R.id.listview_mesaj);
         // Tell our list adapter that we only want 50 messages at a time
         mChatListAdapter = new ChatListAdapter(mFirebaseRef, this, R.layout.chat_message, mUsername);
         listView.setAdapter(mChatListAdapter);

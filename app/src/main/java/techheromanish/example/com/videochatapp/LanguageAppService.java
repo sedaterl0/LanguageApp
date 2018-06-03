@@ -99,27 +99,30 @@ public class LanguageAppService extends Service implements ValueEventListener {
 
 
             for (DataSnapshot author : kullanicilar.getChildren()) {
-
-                if (!author.child("author").getValue().toString().matches(mUsername)) {
+                try {
+                    if (!author.child("author").getValue().toString().matches(mUsername)) {
 //skype yapalım
 
-                    NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    Notification.Builder nb = new Notification.Builder(this);
-                    nb.setContentTitle("Language App");
-                    nb.setContentText("Mesaj Geldi");
-                    nb.setSmallIcon(R.drawable.icon);
-                    nb.setTicker("Bildirim Geldi");
-                    nb.setAutoCancel(true);
-                    nb.setLights(Color.BLUE, 1, 1);
+                        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        Notification.Builder nb = new Notification.Builder(this);
+                        nb.setContentTitle("Language App");
+                        nb.setContentText("Mesaj Geldi");
+                        nb.setSmallIcon(R.drawable.icon);
+                        nb.setTicker("Bildirim Geldi");
+                        nb.setAutoCancel(true);
+                        nb.setLights(Color.BLUE, 1, 1);
 
-                    Intent intent = new Intent(context, AnaSayfa.class);
-                    PendingIntent pending = PendingIntent.getActivity(context, 0, intent, 0);//Notificationa tıklanınca açılacak activityi belirliyoruz
-                    nb.setContentIntent(pending);
+                        Intent intent = new Intent(context, AnaSayfa.class);
+                        PendingIntent pending = PendingIntent.getActivity(context, 0, intent, 0);//Notificationa tıklanınca açılacak activityi belirliyoruz
+                        nb.setContentIntent(pending);
 
-                    Notification notification = nb.getNotification();
-                    notification.vibrate = new long[]{500, 500, 500, 500};
-                    nm.notify(0, notification);
+                        Notification notification = nb.getNotification();
+                        notification.vibrate = new long[]{500, 500, 500, 500};
+                        nm.notify(0, notification);
 
+
+                    }
+                } catch (Exception e) {
 
                 }
 
