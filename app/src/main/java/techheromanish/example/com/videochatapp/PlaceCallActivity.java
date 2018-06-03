@@ -92,5 +92,8 @@ public class PlaceCallActivity extends BaseActivity {
         Intent callScreen = new Intent(this, CallScreenActivity.class);
         callScreen.putExtra(SinchService.CALL_ID, callId);
         startActivity(callScreen);
+        finish();
     }
+
+
 }

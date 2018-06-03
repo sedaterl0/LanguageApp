@@ -24,15 +24,16 @@
             android:orientation="horizontal">
 
 
-
-            <Button
+            <ImageButton
                 android:id="@+id/btndinle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginBottom="11dp"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="10dp"
+                android:background="#CCFFFF"
+                android:src="@drawable/ic_mic_black_24dp"
                 android:text="Button" />
         </RelativeLayout>
 
@@ -87,17 +88,22 @@
         android:textSize="16sp" />
 
 
-    <Button
+    <ImageButton
         android:id="@+id/hangupButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_centerInParent="true"
         android:layout_gravity="bottom|right"
         android:paddingBottom="20dp"
         android:paddingTop="20dp"
         android:text="END call"
+        android:layout_marginBottom="11dp"
+        android:layout_marginRight="10dp"
+
         android:textSize="20sp"
         app:layout_anchor="@+id/relativeLayout"
+        android:background="#CCFFFF"
+        android:src="@drawable/ic_call_end_black_24dp"
         app:layout_anchorGravity="bottom|end" />
 
 

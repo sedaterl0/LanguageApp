@@ -124,7 +124,11 @@ public class AnaSayfa extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -228,6 +232,8 @@ public class AnaSayfa extends AppCompatActivity {
                         intent.putExtra("musername", LoginActivity.mUsername);
                         startActivity(intent);
 
+                        getActivity().finish();
+
 
                         // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
                     }
@@ -271,6 +277,7 @@ public class AnaSayfa extends AppCompatActivity {
                                 startActivity(intent);
 
 
+                                getActivity().finish();
                                 // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -329,5 +336,6 @@ public class AnaSayfa extends AppCompatActivity {
             }
             return null;
         }
+
     }
 }

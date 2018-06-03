@@ -13,7 +13,7 @@ import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,7 +57,7 @@ public class CallScreenActivity extends BaseActivity {
     private TextView mCallState;
     private TextView mCallerName;
     SpeechRecognizer speechRecognizer;
-    Button speechToTextButton;
+    ImageButton speechToTextButton;
     TextView txt;
 
     private static final String FIREBASE_URL = "https://chatapp-b17f7.firebaseio.com/";
@@ -104,8 +104,8 @@ public class CallScreenActivity extends BaseActivity {
         mCallDuration = (TextView) findViewById(R.id.callDuration);
         mCallerName = (TextView) findViewById(R.id.remoteUser);
         mCallState = (TextView) findViewById(R.id.callState);
-        Button endCallButton = (Button) findViewById(R.id.hangupButton);
-        speechToTextButton = (Button) findViewById(R.id.btndinle);
+        ImageButton endCallButton = (ImageButton) findViewById(R.id.hangupButton);
+        speechToTextButton = (ImageButton) findViewById(R.id.btndinle);
         txt = (TextView) findViewById(R.id.txtkonus);
 
         myReceiver = new MusicIntentReceiver();

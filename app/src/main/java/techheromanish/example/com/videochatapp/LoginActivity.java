@@ -186,7 +186,10 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
     public void onClick(View v) {
         SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
         mUsername = edtKullanici.getText().toString();
-        prefs.edit().putString("username", kullaniciAd).commit();
+        prefs.edit().putString("username", mUsername).commit();
+        if (kullaniciMil == null) {
+            setupUsername();
+        }
         prefs.edit().putString("KullaniciMilliyet", kullaniciMil).commit();
         loginClicked(mUsername);
     }
