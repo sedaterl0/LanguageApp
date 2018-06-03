@@ -10,25 +10,33 @@
     android:gravity="center">
 
 
-
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000"
+        android:gravity="center"
+        android:orientation="vertical">
     <EditText
         android:id="@+id/edt_kullaniciadi"
-    android:layout_width="200dp"
-    android:layout_height="50dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:hint="Kullanıcı Adı"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:background="@color/off_white" />
 
     <Spinner
         android:id="@+id/spn_kullanicidil"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:text="Milliyet"
+        style="@style/spinnerItemStyle"
         android:layout_gravity="center"/>
     <Button
         android:id="@+id/btn_giris"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/off_white"
         android:text="Giriş"/>
+    </LinearLayout>
 </LinearLayout>
