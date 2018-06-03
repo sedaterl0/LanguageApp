@@ -207,87 +207,99 @@ public class AnaSayfa extends AppCompatActivity {
         public void onDataChange(final DataSnapshot dataSnapshot) {
 
             if (i == 1) {
-                kisi.clear();
-                //  kisikod.clear();
-                for (DataSnapshot kullanici : dataSnapshot.child("chat").child(LoginActivity.mUsername).getChildren()) {
+                try {
+
+                    kisi.clear();
+                    //  kisikod.clear();
+                    for (DataSnapshot kullanici : dataSnapshot.child("chat").child(LoginActivity.mUsername).getChildren()) {
 
 
-                    kisi.add(kullanici.getKey());
-                    //    kisikod.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
+                        kisi.add(kullanici.getKey());
+                        //    kisikod.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
+
+                    }
+                    ArrayAdapter<String> veriAdaptoru = new ArrayAdapter<String>
+                            (this.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, kisi);
+                    Kisiliste.setAdapter(veriAdaptoru);
+                    Kisiliste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+
+                            intent.putExtra("userid", kisi.get(position));
+                            //  intent.putExtra("userkulad", kisi.get(position));
+                            intent.putExtra("musername", LoginActivity.mUsername);
+                            startActivity(intent);
+
+                            getActivity().finish();
+
+
+                            // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (Exception e) {
+
 
                 }
-                ArrayAdapter<String> veriAdaptoru = new ArrayAdapter<String>
-                        (this.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, kisi);
-                Kisiliste.setAdapter(veriAdaptoru);
-                Kisiliste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-                        Intent intent = new Intent(getContext(), MainActivity.class);
-
-                        intent.putExtra("userid", kisi.get(position));
-                        //  intent.putExtra("userkulad", kisi.get(position));
-                        intent.putExtra("musername", LoginActivity.mUsername);
-                        startActivity(intent);
-
-                        getActivity().finish();
-
-
-                        // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
-                    }
-                });
 
 
             } else if (i == 2) {
-                Aranankisi.clear();
-                // AranankisiKod.clear();
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this.getContext(), R.layout.support_simple_spinner_dropdown_item, milliyet);
-                ArananSpin.setAdapter(arrayAdapter);
-                ArananSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        arananMil = parent.getSelectedItem().toString();
-                        if (arananMil != null) {
+                try {
+                    Aranankisi.clear();
+                    // AranankisiKod.clear();
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this.getContext(), R.layout.support_simple_spinner_dropdown_item, milliyet);
+                    ArananSpin.setAdapter(arrayAdapter);
+                    ArananSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            arananMil = parent.getSelectedItem().toString();
+                            if (arananMil != null) {
 
-                            Aranankisi.clear();
-                            //    AranankisiKod.clear();
-                            for (DataSnapshot Aranankullanici : dataSnapshot.child("Rations").child(arananMil).getChildren()) {
+                                Aranankisi.clear();
+                                //    AranankisiKod.clear();
+                                for (DataSnapshot Aranankullanici : dataSnapshot.child("Rations").child(arananMil).getChildren()) {
 
 
-                                Aranankisi.add(Aranankullanici.getValue().toString());
-                                //  AranankisiKod.add(Aranankullanici.getKey().toString());
+                                    Aranankisi.add(Aranankullanici.getValue().toString());
+                                    //  AranankisiKod.add(Aranankullanici.getKey().toString());
 
+                                }
                             }
+                            ArrayAdapter<String> veriAdaptoru = new ArrayAdapter<String>
+                                    (view.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, Aranankisi);
+                            AranankisiListe.setAdapter(veriAdaptoru);
+                            AranankisiListe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                                    Intent intent = new Intent(getContext(), MainActivity.class);
+
+                                    intent.putExtra("userid", Aranankisi.get(position));
+                                    //   intent.putExtra("userkulad", Aranankisi.get(position));
+                                    intent.putExtra("musername", LoginActivity.mUsername);
+                                    startActivity(intent);
+
+
+                                    getActivity().finish();
+                                    // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
+                                }
+                            });
+
                         }
-                        ArrayAdapter<String> veriAdaptoru = new ArrayAdapter<String>
-                                (view.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, Aranankisi);
-                        AranankisiListe.setAdapter(veriAdaptoru);
-                        AranankisiListe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
 
-                                Intent intent = new Intent(getContext(), MainActivity.class);
+                        }
+                    });
 
-                                intent.putExtra("userid", Aranankisi.get(position));
-                                //   intent.putExtra("userkulad", Aranankisi.get(position));
-                                intent.putExtra("musername", LoginActivity.mUsername);
-                                startActivity(intent);
+                } catch (Exception e) {
 
-
-                                getActivity().finish();
-                                // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
+                }
 
 
             }
