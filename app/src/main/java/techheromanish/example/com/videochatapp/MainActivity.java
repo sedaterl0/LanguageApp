@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.ValueEventListener;
@@ -19,7 +20,7 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity implements View.OnClickListener {
 
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://chatapp-b17f7.firebaseio.com/";
@@ -29,7 +30,8 @@ public class MainActivity extends ListActivity {
     private Firebase mFirebaseRef,nFirebaseRef;
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
-
+    Toolbar mainActivity_toolbar;
+    EditText inputText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,22 +43,21 @@ public class MainActivity extends ListActivity {
         userid = extras.getString("userid", IncomingCallScreenActivity.callerId);
         //   userkulAd = extras.getString("userkulad");
         mUsername=extras.getString("musername");
-
-        // Make sure we have a mUsername
-     //   setupUsername();
-
-
-
         setTitle("Chatting as " + mUsername);
-
-        // Setup our Firebase mFirebaseRef
         Firebase.setAndroidContext(this);
-
         mFirebaseRef = new Firebase(FIREBASE_URL).child("chat").child(mUsername).child(userid);
         nFirebaseRef = new Firebase(FIREBASE_URL).child("chat").child(userid).child(mUsername);
+        initView();
+        mainActivity_toolbar.setTitle(userid);
+        mainActivity_toolbar.setLogo(R.mipmap.logo);
+        mainActivity_toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        mainActivity_toolbar.setOnClickListener(this);
 
-        // Setup our input methods. Enter key on the keyboard or pushing the send button
-        EditText inputText = (EditText) findViewById(R.id.messageInput);
+    }
+
+    public void initView() {
+        mainActivity_toolbar = (Toolbar) findViewById(R.id.toolbarMainActivity);
+        inputText = (EditText) findViewById(R.id.messageInput);
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -66,7 +67,6 @@ public class MainActivity extends ListActivity {
                 return true;
             }
         });
-
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,21 +78,17 @@ public class MainActivity extends ListActivity {
             public void onClick(View view) {
                 sendMessage();
             }
-        });findViewById(R.id.callButton).setOnClickListener(new View.OnClickListener() {
+        });
+        findViewById(R.id.callButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-                Intent callintent=new Intent(MainActivity.this,PlaceCallActivity.class);
+                Intent callintent = new Intent(MainActivity.this, PlaceCallActivity.class);
                 callintent.putExtra("musername", mUsername);
-                callintent.putExtra("userid",userid);
+                callintent.putExtra("userid", userid);
                 startActivity(callintent);
                 finish();
-
             }
         });
-
     }
 
     @Override
@@ -201,6 +197,13 @@ public class MainActivity extends ListActivity {
         return translation.getTranslatedText();
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent(this, AnaSayfa.class);
+        startActivity(i);
+        finish();
     }
 
     interface TranslateCallback {
