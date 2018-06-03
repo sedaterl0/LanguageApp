@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userid = extras.getString("userid", IncomingCallScreenActivity.callerId);
         //   userkulAd = extras.getString("userkulad");
         mUsername=extras.getString("musername");
-        setTitle("Chatting as " + mUsername);
+        // setTitle("Chatting as " + userid);
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase(FIREBASE_URL).child("chat").child(mUsername).child(userid);
         nFirebaseRef = new Firebase(FIREBASE_URL).child("chat").child(userid).child(mUsername);
