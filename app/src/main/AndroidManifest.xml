@@ -39,15 +39,17 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".AnaSayfa"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_ana_sayfa"
-            android:theme="@style/AppBaseTheme" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".speaking"
             android:label="@string/title_activity_ana_sayfa"
-            android:theme="@style/AppBaseTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".LanguageAppService"
