@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -135,11 +136,17 @@ public class AnaSayfa extends AppCompatActivity {
          */
 
         private static final String ARG_SECTION_NUMBER = "section_number";
-        ListView Kisiliste;
+        ListView Kisiliste, AranankisiListe;
+        Spinner ArananSpin;
+
+        String[] milliyet = new String[]{"English", "Français", "Deutsch", "Türk"};
+        String arananMil;
         int i;
         Firebase mRef;
         List<String> kisi = new ArrayList<String>();
         List<String> kisikod = new ArrayList<String>();
+        List<String> Aranankisi = new ArrayList<String>();
+        List<String> AranankisiKod = new ArrayList<String>();
         AnaSayfa activity;
         String musername;
 
@@ -161,8 +168,8 @@ public class AnaSayfa extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_ana_sayfa2, container, false);
-            Kisiliste = (ListView) rootView.findViewById(R.id.liste);
+            View rootView = null;
+
             //  TextView textView = rootView.findViewById(R.id.section_label);
             // textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             // my.userid
@@ -171,18 +178,34 @@ public class AnaSayfa extends AppCompatActivity {
             musername = activity.getData();
 
             i = getArguments().getInt(ARG_SECTION_NUMBER);
+            if (i == 1) {
+                rootView = inflater.inflate(R.layout.fragment_ana_sayfa2, container, false);
+                Kisiliste = (ListView) rootView.findViewById(R.id.liste);
+                //return rootView;
+            }
+            if (i == 2) {
+                rootView = inflater.inflate(R.layout.fragment_ana_sayfa3, container, false);
+                AranankisiListe = (ListView) rootView.findViewById(R.id.listesection2);
+                ArananSpin = (Spinner) rootView.findViewById(R.id.spn_kullaniciarama);
+
+
+            }
+
             Firebase.setAndroidContext(this.getActivity());
             mRef = new Firebase("https://chatapp-b17f7.firebaseio.com/");
             mRef.addValueEventListener(this);
 
             return rootView;
+
         }
 
+
         @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
+        public void onDataChange(final DataSnapshot dataSnapshot) {
 
             if (i == 1) {
                 kisi.clear();
+                kisikod.clear();
                 for (DataSnapshot kullanici : dataSnapshot.child("Users").getChildren()) {
 
 
@@ -190,28 +213,79 @@ public class AnaSayfa extends AppCompatActivity {
                     kisikod.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
 
                 }
-
-
-            }
-            ArrayAdapter<String> veriAdaptoru=new ArrayAdapter<String>
-                    (this.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, kisi);
-            Kisiliste.setAdapter(veriAdaptoru);
-            Kisiliste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayAdapter<String> veriAdaptoru = new ArrayAdapter<String>
+                        (this.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, kisi);
+                Kisiliste.setAdapter(veriAdaptoru);
+                Kisiliste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
                         Intent intent = new Intent(getContext(), MainActivity.class);
 
-                    intent.putExtra("userid", kisikod.get(position));
-                    intent.putExtra("userkulad", kisi.get(position));
+                        intent.putExtra("userid", kisikod.get(position));
+                        intent.putExtra("userkulad", kisi.get(position));
                         intent.putExtra("musername", LoginActivity.mUsername);
                         startActivity(intent);
 
 
-                    // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
-                }
-            });
+                        // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+            } else if (i == 2) {
+                Aranankisi.clear();
+                AranankisiKod.clear();
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this.getContext(), R.layout.support_simple_spinner_dropdown_item, milliyet);
+                ArananSpin.setAdapter(arrayAdapter);
+                ArananSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        arananMil = parent.getSelectedItem().toString();
+                        if (arananMil != null) {
+
+                            Aranankisi.clear();
+                            AranankisiKod.clear();
+                            for (DataSnapshot Aranankullanici : dataSnapshot.child("Rations").child(arananMil).getChildren()) {
+
+
+                                Aranankisi.add(Aranankullanici.getValue().toString());
+                                AranankisiKod.add(Aranankullanici.getKey().toString());
+
+                            }
+                        }
+                        ArrayAdapter<String> veriAdaptoru = new ArrayAdapter<String>
+                                (view.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, Aranankisi);
+                        AranankisiListe.setAdapter(veriAdaptoru);
+                        AranankisiListe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+
+                                intent.putExtra("userid", AranankisiKod.get(position));
+                                intent.putExtra("userkulad", Aranankisi.get(position));
+                                intent.putExtra("musername", LoginActivity.mUsername);
+                                startActivity(intent);
+
+
+                                // Toast.makeText(view.getContext(), "Uçuyozz", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+
+            }
+
         }
 
             @Override
