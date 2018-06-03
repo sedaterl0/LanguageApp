@@ -16,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -290,10 +289,10 @@ public class CallScreenActivity extends BaseActivity {
                                 for (String speechResult : speechResults) {
                                     Log.i(TAG, speechResult);
                                     //  txt.setText(speechResult);
-                                    Toast.makeText(
-                                            getApplicationContext(),
-                                            speechResult,
-                                            Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(
+//                                            getApplicationContext(),
+//                                            speechResult,
+//                                            Toast.LENGTH_SHORT).show();
                                     Chat chat = new Chat(speechResult, MainActivity.mUsername);
                                     mFirebaseRef.child("1").setValue(chat);
                                 }
@@ -321,10 +320,10 @@ public class CallScreenActivity extends BaseActivity {
                             public void onError(int errorCode) {
                                 // TODO Auto-generated method stub
                                 //      loadingDialog.dismiss();
-                                Toast.makeText(
-                                        getApplicationContext(),
-                                        "Bir Hata Oluştu Lütfen Tekrar Deneyin..."+errorCode,
-                                        Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(
+//                                        getApplicationContext(),
+//                                    //    "Bir Hata Oluştu Lütfen Tekrar Deneyin..."+errorCode,
+//                                        Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -396,7 +395,8 @@ public class CallScreenActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        // User should exit activity by ending call, not by going back.
+        super.onBackPressed();
+        endCall();
     }
 
     //method to end the call
@@ -410,7 +410,7 @@ public class CallScreenActivity extends BaseActivity {
         Intent maindon=new Intent(CallScreenActivity.this,MainActivity.class);
         maindon.putExtra("userid", MainActivity.userid);
         maindon.putExtra("musername", LoginActivity.mUsername);
-        maindon.putExtra("userkulad", MainActivity.userkulAd);
+
         startActivity(maindon);
     }
 
@@ -479,7 +479,7 @@ public class CallScreenActivity extends BaseActivity {
             mAudioPlayer.stopProgressTone();
             setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
             String endMsg = "Call ended: " + call.getDetails().toString();
-            Toast.makeText(CallScreenActivity.this, endMsg, Toast.LENGTH_LONG).show();
+            // Toast.makeText(CallScreenActivity.this, endMsg, Toast.LENGTH_LONG).show();
 
             endCall();
         }

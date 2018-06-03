@@ -4,12 +4,12 @@ public class UsersClass {
 
 
     String kullaniciAd;
-    String kullaniciKodAd;
+    //String kullaniciKodAd;
     String kullaniciMilliyet;
 
-    public UsersClass(String kullaniciAd, String kullaniciKodAd, String kullaniciMilliyet) {
+    public UsersClass(String kullaniciAd, String kullaniciMilliyet) {
         this.kullaniciAd = kullaniciAd;
-        this.kullaniciKodAd = kullaniciKodAd;
+        //   this.kullaniciKodAd = kullaniciKodAd;
         this.kullaniciMilliyet = kullaniciMilliyet;
     }
 
@@ -25,13 +25,6 @@ public class UsersClass {
         this.kullaniciAd = kullaniciAd;
     }
 
-    public String getKullaniciKodAd() {
-        return kullaniciKodAd;
-    }
-
-    public void setKullaniciKodAd(String kullaniciKodAd) {
-        this.kullaniciKodAd = kullaniciKodAd;
-    }
 
     public String getKullaniciMilliyet() {
         return kullaniciMilliyet;

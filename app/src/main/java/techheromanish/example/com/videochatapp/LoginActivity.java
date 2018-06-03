@@ -15,8 +15,6 @@ import android.widget.Toast;
 
 import com.sinch.android.rtc.SinchError;
 
-import java.util.Random;
-
 public class LoginActivity extends BaseActivity implements SinchService.StartFailedListener,View.OnClickListener {
 
 
@@ -57,7 +55,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
 */
 
         //initializing UI elements
-giris_btn = (Button) findViewById(R.id.btn_giris);
+        giris_btn = (Button) findViewById(R.id.btn_giris);
         edtKullanici = (EditText) findViewById(R.id.edt_kullaniciadi);
         spin = (Spinner) findViewById(R.id.spn_kullanicidil);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, milliyet);
@@ -73,29 +71,30 @@ giris_btn = (Button) findViewById(R.id.btn_giris);
 
             }
         });
-giris_btn.setOnClickListener(this);
+        giris_btn.setOnClickListener(this);
     }
 
     private void setupUsername() {
         SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
         mUsername = prefs.getString("username", null);
-        kullaniciAd = prefs.getString("KullaniciAdi", null);
+        // kullaniciAd = prefs.getString("KullaniciAdi", null);
         kullaniciMil = prefs.getString("KullaniciMilliyet", null);
 
         if (mUsername == null) {
-            Random r = new Random();
+            //  Random r = new Random();
             // Assign a random user name if we don't have one saved.
-            mUsername = "JavaUser" + r.nextInt(100000);
+            // mUsername = "JavaUser" + r.nextInt(100000);
+            mUsername = edtKullanici.getText().toString();
             prefs.edit().putString("username", mUsername).commit();
-            kullaniciAd = edtKullanici.getText().toString();
-            prefs.edit().putString("KullaniciAdi", kullaniciAd).commit();
+
+            //  prefs.edit().putString("KullaniciAdi", kullaniciAd).commit();
             prefs.edit().putString("KullaniciMilliyet", kullaniciMil).commit();
 
 
         }
         Intent i = new Intent(this, LanguageAppService.class);
         i.putExtra("username", mUsername);
-        i.putExtra("KullaniciAdi", kullaniciAd);
+        //  i.putExtra("KullaniciAdi", kullaniciAd);
         i.putExtra("KullaniciMilliyet", kullaniciMil);
         this.startService(i);
     }
@@ -112,7 +111,7 @@ giris_btn.setOnClickListener(this);
 
         getSinchServiceInterface().setStartListener(this);
         Bundle ext = getIntent().getExtras();
-        if(mUsername!=null&&kullaniciAd!=null&&kullaniciMil!=null){
+        if (mUsername != null && kullaniciMil != null) {
         loginClicked(mUsername);
         giris_btn.setVisibility(View.INVISIBLE);
         edtKullanici.setVisibility(View.INVISIBLE);
@@ -180,8 +179,8 @@ giris_btn.setOnClickListener(this);
     @Override
     public void onClick(View v) {
         SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
-        kullaniciAd = edtKullanici.getText().toString();
-        prefs.edit().putString("KullaniciAdi", kullaniciAd).commit();
+        mUsername = edtKullanici.getText().toString();
+        prefs.edit().putString("username", kullaniciAd).commit();
         prefs.edit().putString("KullaniciMilliyet", kullaniciMil).commit();
         loginClicked(mUsername);
     }

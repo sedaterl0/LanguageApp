@@ -72,9 +72,9 @@ public class AnaSayfa extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Firebase.setAndroidContext(this);
         mRef = new Firebase("https://chatapp-b17f7.firebaseio.com/");
-        UsersClass users = new UsersClass(LoginActivity.kullaniciAd, LoginActivity.mUsername, LoginActivity.kullaniciMil);
+        UsersClass users = new UsersClass(LoginActivity.mUsername, LoginActivity.kullaniciMil);
         mRef.child("Users").child(LoginActivity.mUsername).setValue(users);
-        mRef.child("Rations").child(LoginActivity.kullaniciMil).child(LoginActivity.mUsername).setValue(LoginActivity.kullaniciAd);
+        mRef.child("Rations").child(LoginActivity.kullaniciMil).child(LoginActivity.mUsername).setValue(LoginActivity.mUsername);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -205,12 +205,12 @@ public class AnaSayfa extends AppCompatActivity {
 
             if (i == 1) {
                 kisi.clear();
-                kisikod.clear();
+                //  kisikod.clear();
                 for (DataSnapshot kullanici : dataSnapshot.child("Users").getChildren()) {
 
 
                     kisi.add(kullanici.getValue(UsersClass.class).getKullaniciAd());
-                    kisikod.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
+                    //    kisikod.add(kullanici.getValue(UsersClass.class).getKullaniciKodAd());
 
                 }
                 ArrayAdapter<String> veriAdaptoru = new ArrayAdapter<String>
@@ -223,8 +223,8 @@ public class AnaSayfa extends AppCompatActivity {
 
                         Intent intent = new Intent(getContext(), MainActivity.class);
 
-                        intent.putExtra("userid", kisikod.get(position));
-                        intent.putExtra("userkulad", kisi.get(position));
+                        intent.putExtra("userid", kisi.get(position));
+                        //  intent.putExtra("userkulad", kisi.get(position));
                         intent.putExtra("musername", LoginActivity.mUsername);
                         startActivity(intent);
 
@@ -236,7 +236,7 @@ public class AnaSayfa extends AppCompatActivity {
 
             } else if (i == 2) {
                 Aranankisi.clear();
-                AranankisiKod.clear();
+                // AranankisiKod.clear();
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this.getContext(), R.layout.support_simple_spinner_dropdown_item, milliyet);
                 ArananSpin.setAdapter(arrayAdapter);
                 ArananSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -246,12 +246,12 @@ public class AnaSayfa extends AppCompatActivity {
                         if (arananMil != null) {
 
                             Aranankisi.clear();
-                            AranankisiKod.clear();
+                            //    AranankisiKod.clear();
                             for (DataSnapshot Aranankullanici : dataSnapshot.child("Rations").child(arananMil).getChildren()) {
 
 
                                 Aranankisi.add(Aranankullanici.getValue().toString());
-                                AranankisiKod.add(Aranankullanici.getKey().toString());
+                                //  AranankisiKod.add(Aranankullanici.getKey().toString());
 
                             }
                         }
@@ -265,8 +265,8 @@ public class AnaSayfa extends AppCompatActivity {
 
                                 Intent intent = new Intent(getContext(), MainActivity.class);
 
-                                intent.putExtra("userid", AranankisiKod.get(position));
-                                intent.putExtra("userkulad", Aranankisi.get(position));
+                                intent.putExtra("userid", Aranankisi.get(position));
+                                //   intent.putExtra("userkulad", Aranankisi.get(position));
                                 intent.putExtra("musername", LoginActivity.mUsername);
                                 startActivity(intent);
 
@@ -315,18 +315,17 @@ public class AnaSayfa extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Kişiler";
+                    return "Sohbet";
                 case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
+                    return "Kişiler";
+
             }
             return null;
         }
