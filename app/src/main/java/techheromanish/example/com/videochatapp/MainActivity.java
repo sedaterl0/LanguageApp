@@ -196,6 +196,14 @@ public class MainActivity extends ListActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, AnaSayfa.class);
+        startActivity(i);
+        finish();
+    }
+
     private String translate(String textToTranslate, String targetLanguage) {
 
         TranslateOptions options = TranslateOptions.newBuilder()
