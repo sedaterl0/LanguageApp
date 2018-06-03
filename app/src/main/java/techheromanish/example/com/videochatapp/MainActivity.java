@@ -49,13 +49,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nFirebaseRef = new Firebase(FIREBASE_URL).child("chat").child(userid).child(mUsername);
         initView();
         setSupportActionBar(mainActivity_toolbar);
-        mainActivity_toolbar.setTitle(userid);
-        mainActivity_toolbar.setBackgroundColor(Color.BLUE);
-        mainActivity_toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        setTitle(userid);
+        mainActivity_toolbar.setTitleTextColor(Color.WHITE);
+        mainActivity_toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        mainActivity_toolbar.setLogo(R.drawable.ic_arrow_back_black_24dp);
         mainActivity_toolbar.setOnClickListener(this);
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
     public void initView() {
         mainActivity_toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbarMainActivity);
         inputText = (EditText) findViewById(R.id.messageInput);
@@ -202,10 +208,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(this, AnaSayfa.class);
-        startActivity(i);
-        finish();
+        onBackPressed();
     }
+
 
     interface TranslateCallback {
         void onSuccess(String translatedText);
