@@ -410,6 +410,7 @@ public class CallScreenActivity extends BaseActivity {
         Intent maindon=new Intent(CallScreenActivity.this,MainActivity.class);
         maindon.putExtra("userid", MainActivity.userid);
         maindon.putExtra("musername", LoginActivity.mUsername);
+        maindon.putExtra("userkulad", MainActivity.userkulAd);
         startActivity(maindon);
     }
 

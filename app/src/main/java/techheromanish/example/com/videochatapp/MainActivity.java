@@ -26,7 +26,7 @@ public class MainActivity extends ListActivity {
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://chatapp-b17f7.firebaseio.com/";
     public static String userid;
-    String userkulAd;
+    public static String userkulAd;
     public static String mUsername;
     private Firebase mFirebaseRef,nFirebaseRef;
     private ValueEventListener mConnectedListener;
@@ -90,6 +90,7 @@ public class MainActivity extends ListActivity {
                 callintent.putExtra("musername", mUsername);
                 callintent.putExtra("userid",userid);
                 startActivity(callintent);
+                finish();
 
             }
         });
