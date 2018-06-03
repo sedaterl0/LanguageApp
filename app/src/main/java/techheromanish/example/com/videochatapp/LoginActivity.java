@@ -3,7 +3,6 @@ package techheromanish.example.com.videochatapp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -92,7 +91,7 @@ public class LoginActivity extends BaseActivity implements SinchService.StartFai
             //  Random r = new Random();
             // Assign a random user name if we don't have one saved.
             // mUsername = "JavaUser" + r.nextInt(100000);
-            lineergiris.setBackgroundColor(Color.BLUE);
+
             mUsername = edtKullanici.getText().toString();
             prefs.edit().putString("username", mUsername).commit();
 
