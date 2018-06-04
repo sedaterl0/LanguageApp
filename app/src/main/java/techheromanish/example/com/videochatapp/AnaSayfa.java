@@ -187,11 +187,13 @@ public class AnaSayfa extends AppCompatActivity {
             if (i == 1) {
                 rootView = inflater.inflate(R.layout.fragment_ana_sayfa2, container, false);
                 Kisiliste = (ListView) rootView.findViewById(R.id.liste);
+
                 //return rootView;
             }
             if (i == 2) {
                 rootView = inflater.inflate(R.layout.fragment_ana_sayfa3, container, false);
                 AranankisiListe = (ListView) rootView.findViewById(R.id.listesection2);
+
                 ArananSpin = (Spinner) rootView.findViewById(R.id.spn_kullaniciarama);
 
 

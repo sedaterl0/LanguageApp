@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Incoming call"
+            android:text="Arıyor..."
                 android:textSize="16sp"
                 android:textAllCaps="true"
                 />
@@ -54,20 +54,26 @@
             android:layout_gravity="center"
             android:gravity="center">
 
-            <Button
+        <ImageButton
                     android:id="@+id/answerButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
                     android:text="Answer"
                     android:textSize="20sp"
+            android:background="@drawable/buttonshape"
+            android:src="@drawable/ic_phone_in_talk_black_24dp"
                     />
-            <Button
+
+        <ImageButton
                     android:id="@+id/declineButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
                     android:text="Cancel"
                     android:textSize="20sp"
-                    android:layout_toRightOf="@+id/answerButton"/>
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/answerButton"
+            android:background="@drawable/buttonshape"
+            android:src="@drawable/ic_cancel_black_24dp" />
 
     </RelativeLayout>
 

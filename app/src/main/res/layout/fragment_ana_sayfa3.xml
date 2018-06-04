@@ -20,6 +20,7 @@
         android:id="@+id/listesection2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spn_kullaniciarama" />
+        android:layout_below="@+id/spn_kullaniciarama"
+        android:background="@drawable/e08a4f3977" />
 
 </RelativeLayout>

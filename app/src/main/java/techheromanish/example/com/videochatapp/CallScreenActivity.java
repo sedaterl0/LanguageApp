@@ -61,7 +61,7 @@ public class CallScreenActivity extends BaseActivity {
     TextView txt;
 
     private static final String FIREBASE_URL = "https://chatapp-b17f7.firebaseio.com/";
-    private Firebase mFirebaseRef,nFirebaseRef;
+    private Firebase mFirebaseRef, nFirebaseRef, lFirebaseRef;
 
     String dil, mesaj;
 
@@ -113,6 +113,7 @@ public class CallScreenActivity extends BaseActivity {
         Firebase.setAndroidContext(this);
 
         mFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(LoginActivity.mUsername).child(callerId);
+        lFirebaseRef = new Firebase(FIREBASE_URL).child("goruntulusohbet").child(callerId).child(LoginActivity.mUsername);
 
 
 
@@ -260,103 +261,124 @@ public class CallScreenActivity extends BaseActivity {
         if (call != null) {
             mCallerName.setText(call.getRemoteUserId());
             mCallState.setText(call.getState().toString());
+            //initiating
             if (call.getState() == CallState.ESTABLISHED) {
                 //when the call is established, addVideoViews configures the video to  be shown
+
                 addVideoViews();
             }
+
         }
-        speechToTextButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                speechRecognizer = SpeechRecognizer
-                        .createSpeechRecognizer(v.getContext());
+        try {
+            speechToTextButton.setOnClickListener(new OnClickListener() {
 
-                speechRecognizer
-                        .setRecognitionListener(new RecognitionListener() {
+                @Override
+                public void onClick(View v) {
+                    speechRecognizer = SpeechRecognizer
+                            .createSpeechRecognizer(v.getContext());
 
-                            @Override
-                            public void onRmsChanged(float arg0) {
-                                // TODO Auto-generated method stub
+                    speechRecognizer
+                            .setRecognitionListener(new RecognitionListener() {
 
-                            }
+                                @Override
+                                public void onRmsChanged(float arg0) {
+                                    // TODO Auto-generated method stub
 
-                            @Override
-                            public void onResults(Bundle results) {
-                                // TODO Auto-generated method stub
-                                // loadingDialog.dismiss();
-                                ArrayList<String> speechResults = results
-                                        .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                                for (String speechResult : speechResults) {
-                                    Log.i(TAG, speechResult);
-                                    //  txt.setText(speechResult);
+                                }
+
+                                @Override
+                                public void onResults(Bundle results) {
+                                    // TODO Auto-generated method stub
+                                    // loadingDialog.dismiss();
+                                    ArrayList<String> speechResults = results
+                                            .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                                    for (String speechResult : speechResults) {
+                                        Log.i(TAG, speechResult);
+                                        //  txt.setText(speechResult);
 //                                    Toast.makeText(
 //                                            getApplicationContext(),
 //                                            speechResult,
 //                                            Toast.LENGTH_SHORT).show();
-                                    Chat chat = new Chat(speechResult, MainActivity.mUsername);
-                                    mFirebaseRef.child("1").setValue(chat);
+                                        Chat chat = new Chat(speechResult, MainActivity.mUsername);
+                                        mFirebaseRef.child("1").setValue(chat);
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onReadyForSpeech(Bundle arg0) {
-                                // TODO Auto-generated method stub
+                                @Override
+                                public void onReadyForSpeech(Bundle arg0) {
+                                    // TODO Auto-generated method stub
 
-                            }
+                                }
 
-                            @Override
-                            public void onPartialResults(Bundle arg0) {
-                                // TODO Auto-generated method stub
+                                @Override
+                                public void onPartialResults(Bundle arg0) {
+                                    // TODO Auto-generated method stub
 
-                            }
+                                }
 
-                            @Override
-                            public void onEvent(int arg0, Bundle arg1) {
-                                // TODO Auto-generated method stub
+                                @Override
+                                public void onEvent(int arg0, Bundle arg1) {
+                                    // TODO Auto-generated method stub
 
-                            }
+                                }
 
-                            @Override
-                            public void onError(int errorCode) {
-                                // TODO Auto-generated method stub
-                                //      loadingDialog.dismiss();
+
+                                @Override
+                                public void onError(int errorCode) {
+                                    // TODO Auto-generated method stub
+                                    //      loadingDialog.dismiss();
 //                                Toast.makeText(
 //                                        getApplicationContext(),
 //                                    //    "Bir Hata Oluştu Lütfen Tekrar Deneyin..."+errorCode,
 //                                        Toast.LENGTH_SHORT).show();
 
-                            }
+                                }
 
-                            @Override
-                            public void onEndOfSpeech() {
-                                // TODO Auto-generated method stub
-                                //     loadingDialog
-                                //              .setMessage("Kayıt Bitti.Sonuçlar Getiriliyor");
 
-                            }
+                                @Override
+                                public void onEndOfSpeech() {
+                                    // TODO Auto-generated method stub
+                                    //     loadingDialog
+                                    //              .setMessage("Kayıt Bitti.Sonuçlar Getiriliyor");
 
-                            @Override
-                            public void onBufferReceived(byte[] arg0) {
-                                // TODO Auto-generated method stub
+                                }
 
-                            }
+                                @Override
+                                public void onBufferReceived(byte[] arg0) {
+                                    // TODO Auto-generated method stub
 
-                            @Override
-                            public void onBeginningOfSpeech() {
-                                // TODO Auto-generated method stub
-                                //  loadingDialog.setMessage("Kayıt Başladı");
-                            }
-                        });
+                                }
 
-                Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
-                recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
-                speechRecognizer.startListening(recognizerIntent);
+                                @Override
+                                public void onBeginningOfSpeech() {
+                                    // TODO Auto-generated method stub
+                                    //  loadingDialog.setMessage("Kayıt Başladı");
+                                }
+                            });
 
-            }
-        });
+                    Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
+                    recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+                    speechRecognizer.startListening(recognizerIntent);
 
+                }
+            });
+        } catch (Exception e) {
+
+        }
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (speechRecognizer != null) {
+            speechRecognizer.stopListening();
+            speechRecognizer.cancel();
+            speechRecognizer.destroy();
+        }
+        super.onDestroy();
     }
 
     private class MusicIntentReceiver extends BroadcastReceiver {
@@ -401,6 +423,13 @@ public class CallScreenActivity extends BaseActivity {
 
     //method to end the call
     private void endCall() {
+
+        try {
+            mFirebaseRef.removeValue();
+            lFirebaseRef.removeValue();
+        } catch (Exception e) {
+        }
+
         mAudioPlayer.stopProgressTone();
         Call call = getSinchServiceInterface().getCall(mCallId);
         if (call != null) {
