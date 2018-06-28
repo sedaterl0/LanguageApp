@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String translate(String textToTranslate, String targetLanguage) {
 
         TranslateOptions options = TranslateOptions.newBuilder()
-                .setApiKey("AIzaSyDBGQwU3XGHOgI2uiyPP_P4fQDkwjVR7pk").build();
+                .setApiKey(getString(R.string.translate_api)).build();
         Translate trService = options.getService();
         Translation translation = trService.translate(textToTranslate, Translate.TranslateOption.targetLanguage(targetLanguage));
         return translation.getTranslatedText();
